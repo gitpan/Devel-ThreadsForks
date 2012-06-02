@@ -1,2 +1,6 @@
+0.02    2 June 2012
+        Auto-generated file now also contains version number and generation
+        date and time.
+
 0.01    31 May 2012
         First version of Devel::ThreadsForks.  No real tests yet.
