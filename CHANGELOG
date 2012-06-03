@@ -1,3 +1,16 @@
+0.03    3 June 2012
+        Finally wrote the test-suite.  Fixed some small problems that the
+        test-suite uncovered.
+
+        "threadsforks" helper file will now exit with value 1 to indicate
+        a problem if threads / forks are not available.  This value will
+        be properly propagated to the calling process even the first time
+        the Makefile.PL is changed (and it is being executed internally with
+        a different perl).
+
+        "threadsforks" helper file now has a version and time and date stamp
+        for easier remote debugging if necessary.
+
 0.02    2 June 2012
         Auto-generated file now also contains version number and generation
         date and time.
