@@ -1,7 +1,7 @@
 package Devel::ThreadsForks;
 
 # set version information
-$VERSION= '0.04';
+$VERSION= '0.05';
 
 # make sure we do everything by the book from now on
 use strict;
@@ -69,7 +69,7 @@ sub import {
 
         # get running script
         open( IN, $0 )
-          or die "Could not open script for reading '$0': $!";
+          or _die("Could not open script for reading '$0': $!");
         my $script= do { local $/; <IN> };
         close IN;
 
@@ -83,21 +83,21 @@ sub import {
               or _die("Could not open script for writing '$0': $!");
             print OUT $script;
             close OUT
-              or _die("Problem flushing '$0': $!\n");
+              or _die("Problem flushing '$0': $!");
 
             # write out check file
             open( OUT, ">$file" )
               or _die("Could not open '$file' for writing: $!");
             print OUT $code;
             close OUT
-              or _die("Problem flushing '$file': $!\n");
+              or _die("Problem flushing '$file': $!");
 
             # update the manifest(s)
             foreach my $manifest ( glob( "MANIFEST*" ) ) {
                 open( OUT, ">>$manifest" ) or die "Could not open '$manifest': $!";
                 print OUT "$file                threads/forks test (added by Devel::ThreadsForks)\n";
                 close OUT
-                  or _die("Problem flushing '$manifest': $!\n");
+                  or _die("Problem flushing '$manifest': $!");
             }
 
             # cannot continue to execute $0, so we do it from here and then exit
@@ -116,7 +116,7 @@ sub import {
           or _die("Could not open '$file' for writing: $!");
         print OUT $code;
         close OUT
-          or _die("Problem flushing '$file': $!\n");
+          or _die("Problem flushing '$file': $!");
     }
 
     # do the check
@@ -133,8 +133,10 @@ sub import {
 #  IN: 1 message to die with
 
 sub _die {
+    my ($text)= @_;
+    chomp($text);
 
-    print STDERR @_;
+    print STDERR $text, $\;
     exit 1;
 } #_die
 
@@ -148,7 +150,7 @@ Devel::ThreadsForks - check for availability of threads or forks
 
 =head1 VERSION
 
-This documentation describes version 0.04.
+This documentation describes version 0.05.
 
 =head1 SYNOPSIS
 
