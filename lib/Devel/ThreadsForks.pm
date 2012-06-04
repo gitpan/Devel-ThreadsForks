@@ -1,7 +1,7 @@
 package Devel::ThreadsForks;
 
 # set version information
-$VERSION= '0.03';
+$VERSION= '0.04';
 
 # make sure we do everything by the book from now on
 use strict;
@@ -80,23 +80,24 @@ sub import {
             # adapt script
             print STDERR "Installing 'threadsforks' checking logic for $0\n";
             open( OUT, ">$0" )
-              or die "Could not open script for writing '$0': $!";
+              or _die("Could not open script for writing '$0': $!");
             print OUT $script;
             close OUT
-              or die qq{Problem flushing "$0": $!\n};
+              or _die("Problem flushing '$0': $!\n");
 
             # write out check file
             open( OUT, ">$file" )
-              or die "Could not open '$file' for writing: $!";
+              or _die("Could not open '$file' for writing: $!");
             print OUT $code;
             close OUT
-              or die qq{Problem flushing "$file": $!\n};
+              or _die("Problem flushing '$file': $!\n");
 
             # update the manifest(s)
             foreach my $manifest ( glob( "MANIFEST*" ) ) {
                 open( OUT, ">>$manifest" ) or die "Could not open '$manifest': $!";
                 print OUT "$file                threads/forks test (added by Devel::ThreadsForks)\n";
-                close OUT;
+                close OUT
+                  or _die("Problem flushing '$manifest': $!\n");
             }
 
             # cannot continue to execute $0, so we do it from here and then exit
@@ -105,23 +106,37 @@ sub import {
         }
 
         # huh?
-        print STDERR __PACKAGE__ . " could not find code snippet, aborting\n";
-        exit;
+        _die( __PACKAGE__ . " could not find code snippet, aborting\n" );
     }
 
     # new version of checking file
     elsif ( -s $file != length $code ) {
         print STDERR "Updating 'threadsforks' checking logic\n";
         open( OUT, ">$file" )
-          or die "Could not open '$file' for writing: $!";
+          or _die("Could not open '$file' for writing: $!");
         print OUT $code;
         close OUT
-          or die qq{Problem flushing "$file": $!\n};
+          or _die("Problem flushing '$file': $!\n");
     }
 
     # do the check
     do $file;
 } #import
+
+#-------------------------------------------------------------------------------
+#
+# Internal subroutines
+#
+#-------------------------------------------------------------------------------
+# _die
+#
+#  IN: 1 message to die with
+
+sub _die {
+
+    print STDERR @_;
+    exit 1;
+} #_die
 
 #-------------------------------------------------------------------------------
 
@@ -133,7 +148,7 @@ Devel::ThreadsForks - check for availability of threads or forks
 
 =head1 VERSION
 
-This documentation describes version 0.03.
+This documentation describes version 0.04.
 
 =head1 SYNOPSIS
 
