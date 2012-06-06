@@ -1,7 +1,7 @@
 package Devel::ThreadsForks;
 
 # set version information
-$VERSION= '0.05';
+$VERSION= '0.06';
 
 # make sure we do everything by the book from now on
 use strict;
@@ -39,9 +39,6 @@ TEXT
     # byebye
     exit 1;
 }
-
-# no need to do anything else
-1;
 CODE
 
 # set version info in generated file
@@ -75,7 +72,7 @@ sub import {
 
         # update the script
         if ( $script =~
-          s#(BEGIN\s*\{\s*eval\s*"\s*use\s+Devel::ThreadsForks\s*)"\s*\s*\}#$1; 1" || do '$file' }#s ) {
+          s#(BEGIN\s*\{\s*eval\s*"\s*use\s+Devel::ThreadsForks\s*)(["'])\s*\s*\}#$1; 1$2 or do '$file' }#s ) {
 
             # adapt script
             print STDERR "Installing 'threadsforks' checking logic for $0\n";
@@ -150,7 +147,7 @@ Devel::ThreadsForks - check for availability of threads or forks
 
 =head1 VERSION
 
-This documentation describes version 0.05.
+This documentation describes version 0.06.
 
 =head1 SYNOPSIS
 
@@ -158,7 +155,7 @@ This documentation describes version 0.05.
  BEGIN { eval "use Devel::ThreadsForks" }
 
  # after
- BEGIN { eval "use Devel::ThreadsForks" || do "threadsforks" }
+ BEGIN { eval "use Devel::ThreadsForks; 1" or do "threadsforks" }
  # "threadsforks" written and added to MANIFEST
 
 =head1 DESCRIPTION
@@ -184,7 +181,7 @@ case it is running on an unthreaded Perl.
 
 It will also adapt the code in the Makefile.PL itself by changing it to:
 
- BEGIN { eval "use Devel::ThreadsForks" || do "threadsforks" }
+ BEGIN { eval "use Devel::ThreadsForks; 1" || do 'threadsforks' }
 
 Finally, it will adapt the MANIFEST by adding the line:
 
@@ -203,7 +200,7 @@ file and not do anything else.
 A user trying to install the distribution, will most likely B<not> have the
 Devel::ThreadsForks module installed.  This is ok, because then the eval in:
 
- BEGIN { eval "use Devel::ThreadsForks" || do "threadsforks" }
+ BEGIN { eval "use Devel::ThreadsForks; 1" or do "threadsforks" }
 
 will fail, and the "threadsforks" file will get executed.  And thus perform
 the test in the user environment.  And fail with a message if the version of

@@ -78,7 +78,7 @@ print OUT \$Devel::ThreadsForks::SIZE;
 close OUT;
 CODE
         ( my $final_code= $initial_code ) =~
-          s#(ThreadsForks)"#$1; 1" || do 'threadsforks'#;
+          s#(ThreadsForks)"#$1; 1" or do 'threadsforks'#;
 
         # set up Makefile.PL
         ok( open( OUT, ">Makefile.PL" ), "Failed to open Makefile.PL: $!" );
@@ -141,7 +141,7 @@ print OUT \$Devel::ThreadsForks::SIZE;
 close OUT;
 CODE
         ( my $final_code= $initial_code ) =~
-          s#(ThreadsForks)"#$1; 1" || do 'threadsforks'#;
+          s#(ThreadsForks)"#$1; 1" or do 'threadsforks'#;
 
         # set up Makefile.PL
         ok( open( OUT, ">Makefile.PL" ), "Failed to open Makefile.PL: $!" );
